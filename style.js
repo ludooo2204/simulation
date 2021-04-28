@@ -39,6 +39,8 @@ const styles = StyleSheet.create({
     container: {
       flex: 1,
       backgroundColor:'#c2c0bc',
+      justifyContent:"space-around",
+      // fontSize:40
       // padding:"2%",
       // justifyContent: 'center'
      
@@ -46,6 +48,7 @@ const styles = StyleSheet.create({
     listContainer: {
       flex: 1,
       backgroundColor:"#a6a298",
+      // fontSize:50,
       
       
       // borderRadius:20
@@ -139,7 +142,8 @@ const styles = StyleSheet.create({
       marginBottom: 9
     },  
     deviceName: {
-      fontSize: 16,
+      fontSize: 25,
+      fontWeight:"bold"
     },
    
     connectionStatus: {

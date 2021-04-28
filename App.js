@@ -1,23 +1,13 @@
 import React from 'react';
 import axios from 'axios';
-import {ConnectionScreen,FourList,DeviceList} from './Connected'
-import {styles} from './style'
+import {ConnectionScreen, FourList, DeviceList} from './Connected';
+import {styles} from './style';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {
-  Alert,
-  Button,
-  Text,
-  View,
-  ActivityIndicator
-} from "react-native";
+import {Alert, Button, Text, View, ActivityIndicator} from 'react-native';
 import RNBluetoothClassic, {
   BTEvents,
   BTCharsets,
 } from 'react-native-bluetooth-classic';
-
-
-       
-
 
 export default class App extends React.Component {
   constructor(props) {
@@ -28,8 +18,8 @@ export default class App extends React.Component {
       scannedData: [],
       isAccepting: false,
       isDiscovering: false,
-      isConnecting:false,
-      count:0
+      isConnecting: false,
+      count: 0,
     };
   }
 
@@ -41,39 +31,39 @@ export default class App extends React.Component {
     this.subs.push(
       RNBluetoothClassic.addListener(
         BTEvents.BLUETOOTH_CONNECTED,
-        device => this.onConnected(device),
+        (device) => this.onConnected(device),
         this,
       ),
     );
     this.subs.push(
       RNBluetoothClassic.addListener(
         BTEvents.BLUETOOTH_DISCONNECTED,
-        device => this.onDisconnected(device),
+        (device) => this.onDisconnected(device),
         this,
       ),
     );
     this.subs.push(
       RNBluetoothClassic.addListener(
         BTEvents.CONNECTION_LOST,
-        error => this.onConnectionLost(error),
+        (error) => this.onConnectionLost(error),
         this,
       ),
     );
     this.subs.push(
       RNBluetoothClassic.addListener(
         BTEvents.ERROR,
-        error => this.onError(error),
+        (error) => this.onError(error),
         this,
       ),
     );
   }
 
   componentWillUnmount() {
-    this.subs.forEach(sub => sub.remove());
+    this.subs.forEach((sub) => sub.remove());
   }
 
   onConnected(device) {
-    console.log("taratata");
+    console.log('taratata');
     Alert.alert(`Connected to ${device.name}`);
     this.initialize();
   }
@@ -95,11 +85,11 @@ export default class App extends React.Component {
 
   async initialize() {
     let enabled = await RNBluetoothClassic.isEnabled();
-    this.setState({ bluetoothEnabled: enabled });
+    this.setState({bluetoothEnabled: enabled});
 
     if (enabled) {
       this.refreshDevices();
-    }    
+    }
   }
 
   async refreshDevices() {
@@ -107,7 +97,7 @@ export default class App extends React.Component {
       devices: [],
       connectedDevice: undefined,
     };
-   
+
     try {
       let connectedDevice = await RNBluetoothClassic.getConnectedDevice();
 
@@ -130,18 +120,17 @@ export default class App extends React.Component {
   }
 
   async connectToDevice(device) {
-
     console.log(`connexion en cours ${device.id}`);
     //todo toast native
-    this.setState({isConnecting: true})
+    this.setState({isConnecting: true});
     // Alert.alert(`Connection to ${device.name} en cours !!`);
     try {
       await RNBluetoothClassic.setEncoding(BTCharsets.ASCII);
       let connectedDevice = await RNBluetoothClassic.connect(device.id);
       this.setState({connectedDevice});
-         console.log("message");
-    console.log("rem");
-    await RNBluetoothClassic.write('rem' + '\r');
+      console.log('message');
+      console.log('rem');
+      await RNBluetoothClassic.write('rem' + '\r');
     } catch (error) {
       console.log(error.message);
       Alert.alert(`Connection to ${device.name} unsuccessful`);
@@ -154,48 +143,45 @@ export default class App extends React.Component {
   }
 
   async acceptConnections() {
-    console.log("App is accepting connections now...");
-    this.setState({ isAccepting: true });
+    console.log('App is accepting connections now...');
+    this.setState({isAccepting: true});
 
     try {
       let connectedDevice = await RNBluetoothClassic.accept();
 
       if (connectedDevice) {
-        this.setState({ connectedDevice, isAccepting: false });
-      }      
-    } catch(error) {
+        this.setState({connectedDevice, isAccepting: false});
+      }
+    } catch (error) {
       console.log(error);
-     
-      this.setState({ isAccepting: false });
+
+      this.setState({isAccepting: false});
     }
   }
 
   async cancelAcceptConnections() {
-    console.log("...");
-    
+    console.log('...');
+
     try {
       await RNBluetoothClassic.cancelAccept();
-      this.setState({ isAccepting: false });
-    } catch(error) {
+      this.setState({isAccepting: false});
+    } catch (error) {
       console.log(error);
-     
     }
   }
 
   async discoverDevices() {
-    console.log("Attempting to discover devices...");
-    this.setState({ isDiscovering: true });
+    console.log('Attempting to discover devices...');
+    this.setState({isDiscovering: true});
 
     try {
       const unpaired = await RNBluetoothClassic.discoverDevices();
-      console.log("Unpaired Devices");
+      console.log('Unpaired Devices');
       console.log(unpaired);
-   
-    } catch(error) {
+    } catch (error) {
       console.log(error);
-     
     } finally {
-      this.setState({ isDiscovering: false });
+      this.setState({isDiscovering: false});
     }
   }
 
@@ -204,15 +190,14 @@ export default class App extends React.Component {
 
     try {
       await RNBluetoothClassic.cancelDiscovery();
-      this.setState({ isDiscovering: false });
-    } catch(error) {
+      this.setState({isDiscovering: false});
+    } catch (error) {
       console.log(error);
-     
     }
   }
 
   refresh = () => this.refreshDevices();
-  selectDevice = device => this.connectToDevice(device);
+  selectDevice = (device) => this.connectToDevice(device);
   unselectDevice = () => this.disconnectFromDevice();
   accept = () => this.acceptConnections();
   cancelAccept = () => this.cancelAcceptConnections();
@@ -220,23 +205,23 @@ export default class App extends React.Component {
   cancelDiscover = () => this.cancelDiscoverDevices();
   storeData = async (value) => {
     try {
-      await AsyncStorage.setItem('ludo', String(value))
+      await AsyncStorage.setItem('ludo', String(value));
     } catch (e) {
       // saving error
     }
-  }
-  ludo=""
-getData = async () => {
-  try {
-    const value = await AsyncStorage.getItem('ludo')
-    console.log(value);
-    if(value !== null) {
-      console.log("value "+value)
+  };
+  ludo = '';
+  getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('ludo');
+      console.log(value);
+      if (value !== null) {
+        console.log('value ' + value);
+      }
+    } catch (e) {
+      // error reading value
     }
-  } catch(e) {
-    // error reading value
-  }
-}
+  };
 
   render() {
     console.log('App.render()');
@@ -247,9 +232,9 @@ getData = async () => {
       ? styles.toolbarButton.color
       : 'green';
 
-    let acceptFn = !this.state.isAccepting 
+    let acceptFn = !this.state.isAccepting
       ? () => this.accept()
-      : () => this.cancelAccept();      
+      : () => this.cancelAccept();
 
     let discoverFn = !this.state.isDiscovering
       ? () => this.discover()
@@ -257,76 +242,27 @@ getData = async () => {
 
     return (
       <View style={styles.container}>
-      
-          {this.state.connectedDevice ? (
-            <ConnectionScreen
-              device={this.state.connectedDevice}
-              scannedData={this.state.scannedData}
-              disconnect={this.unselectDevice}
-              onSend={this.onSend}
+        {this.state.connectedDevice ? (
+          <ConnectionScreen
+            device={this.state.connectedDevice}
+            scannedData={this.state.scannedData}
+            disconnect={this.unselectDevice}
+            onSend={this.onSend}
+          />
+        ) : this.state.isConnecting ? (
+          <View style={{flex: 1, justifyContent: 'center'}}>
+            <ActivityIndicator size="large" color="black" />
+          </View>
+        ) : (
+          <View style={styles.container}>
+            <DeviceList
+              devices={this.state.deviceList}
+              onPress={this.selectDevice}
             />
-          ) : ( this.state.isConnecting ?
-            (
-              <View style={{flex:1,justifyContent:"center"}}>
-             <ActivityIndicator size="large" color="black"/>
-             </View>
-            )
-            :
-              (<View style={styles.container}>
-                
-              
-      
-              <DeviceList
-                devices={this.state.deviceList}
-                onPress={this.selectDevice}
-              />
-              <View style={{flex:1,justifyContent:'space-between'}}>
-              <Text>{'count = '+this.state.count}</Text>
-              <Button 
-        title="save count+"
-        onPress={() => {Alert.alert('Set count ='+ this.state.count);this.storeData(this.state.count)}}/>
-        <Button 
-        title=" get"
-        onPress={() => {
-          axios.get('http://lomano.go.yo.fr/velo18.txt')
-    .then(function (response) {
-      console.log(response.data);
-   
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
-        }}/>
-        <Button 
-        title=" post"
-                onPress={() => {
-                  axios
-                    .post(
-                      'http://essailudo.000webhostapp.com/piscine/piscine.php',
-                      '222',
-                    )
-        .then(function (response) {
-          console.log(response);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-        }}/>
-        <Button
-        title="lire count"
-        onPress={() => {this.getData()}}/>
-              </View>
-              </View>
-            )
-           
-   )
-         
-          }
-        </View>
+          </View>
+        )}
+      </View>
       // </StyleProvider>
     );
   }
 }
-
-
-
