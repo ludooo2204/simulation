@@ -3,7 +3,7 @@
 
 // les données ne sont enregistrées que lors de la validation du dernier point de mesures PAR VOIE !
 
-import axios from 'axios';
+// import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import RNBluetoothClassic, {
   BTEvents,
@@ -30,7 +30,6 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {NavigationContainer} from '@react-navigation/native';
 const Stack = createStackNavigator();
 
-
 const Notifications = () => {
   return (
     <View>
@@ -52,20 +51,13 @@ const Notifications = () => {
 
 //TODO bouton pour valider la valeur de la sensibilité et l'envoyer a la suite du string des valeur de points.
 const VoieDeMesure = ({voies, onPress, voieSelected}) => {
-  console.log('voies');
-  console.log(voies);
-  // voies=voies.voieDeMesure;
-  // console.log(voies.voiesDeMesure);
   let voieDeMesureFour = voies.voiesDeMesure;
-
   let styleVoie = styles.voieText;
   let styleVoie2 = styles.voieTextSelected;
-  // console.log("sdkvnsdlv");
+
   return (
     <ScrollView horizontal={true}>
       {voieDeMesureFour.map((voie, i) => {
-        // console.log("voie");
-        // console.log(voie);
         let bgColor = '#0f0';
         return (
           <TouchableOpacity
@@ -83,9 +75,6 @@ const VoieDeMesure = ({voies, onPress, voieSelected}) => {
 };
 
 const DeviceList = ({devices, onPress, style}) => {
-  console.log('DeviceList.render()');
-  console.log(devices);
-
   return (
     <ScrollView
       style={styles.listContainer}
@@ -113,21 +102,10 @@ const DeviceList = ({devices, onPress, style}) => {
   );
 };
 const FourList = ({fours, onPress, onLongPress, fourSelected}) => {
-  // console.log('fourList.render()');
-  // console.log(fours);
-  // console.log('this.state.fourSelectionne');
-  // console.log(this.state.fourSelectionne);
-  console.log('fourSelected');
-  console.log(fourSelected);
-
   let styleFour = styles.fourText;
   let styleFour2 = styles.fourTextSelected;
   return (
-    <ScrollView
-      horizontal={true}
-      // style={styles.listFourContainer}
-      // contentContainerStyle={styles.container}
-    >
+    <ScrollView horizontal={true}>
       {fours.map((four, i) => {
         let bgColor = '#0f0';
         return (
@@ -149,7 +127,7 @@ class ConnectionScreen extends React.Component {
   constructor(props) {
     super(props);
     this.myTextInput = React.createRef();
-    // this.myTextInputSensibilite = React.createRef();
+
     this.state = {
       fourSelectionne: '',
       voieSelectionne: '',
@@ -160,25 +138,15 @@ class ConnectionScreen extends React.Component {
       cleDataSave: '',
       DataToSave: '',
       VoiesValidees: '',
-      //   modalSensibiliteVisible:false,
     };
     this.test = '';
   }
 
   storeData = async (value) => {
     try {
-      console.log('this.state.cle1');
-      console.log(this.state.cleDataSave);
-
-      console.log('this.state.cle2');
-      console.log(this.state.cleDataSave);
       let dataCle = this.state.cleDataSave.toString();
-      console.log('data to save');
-      console.log(String(value));
+
       await AsyncStorage.setItem(dataCle, String(value));
-      // await AsyncStorage.setItem('toto', 'tam mere ene sjoht')
-      console.log('this.state.cle2');
-      console.log(this.state.cleDataSave);
     } catch (e) {
       // saving error
     }
@@ -205,7 +173,6 @@ class ConnectionScreen extends React.Component {
       let dataCle = this.state.cleDataSave.toString();
 
       const valueSaved = await AsyncStorage.getItem(dataCle);
-      // const valueSaved = await AsyncStorage.getItem('ludo')
 
       if (valueSaved !== null) {
         Alert.alert('value ' + valueSaved);
@@ -247,26 +214,19 @@ class ConnectionScreen extends React.Component {
   controleSensibilite = () => {
     let temp = this.state.fourSelectionne.pointSensibilité;
 
-    console.log(temp);
     let consigneSensibilite = 'SOUR ' + temp;
-
     this.setState({pointSimule: consigneSensibilite});
-
     this.SendDataAuto(consigneSensibilite);
   };
 
   getAllData = async (four) => {
     try {
-      console.log('getAlldata');
-      console.log(four);
       let nom = four.name;
       let DataFourToTranfer = {};
       this.test = '';
       DataFourToTranfer.date = new Date().toLocaleString('fr-FR');
       DataFourToTranfer.nomFour = nom;
       DataFourToTranfer.data = [];
-      // this.test=new Date().toLocaleString('fr-FR', { month: 'long', day: 'numeric' })+"\n"
-      // console.log(four);
 
       four.cle = '';
       let voiesDeMesure = [];
@@ -274,15 +234,13 @@ class ConnectionScreen extends React.Component {
 
       for (const voie of voiesDeMesure) {
         four.cle = nom + '-' + voie.name;
-        console.log(four.cle);
+
         this.getDataFour(four.cle);
       }
 
       setTimeout(() => {
-        console.log('this.test lubu');
         let data = this.test.split('\n');
-        console.log('data');
-        // console.log(data);
+
         for (const iterator of data) {
           if (iterator != '') {
             let dataPoint = {};
@@ -293,58 +251,51 @@ class ConnectionScreen extends React.Component {
             DataFourToTranfer.data.push(dataPoint);
           }
         }
-        console.log('donnees a transfert !');
-        // console.log(DataFourToTranfer);
-        // console.log(DataFourToTranfer.data);
-        // console.log(DataFourToTranfer.date);
-        // console.log(DataFourToTranfer.nomFour);
-        // console.log(DataFourToTranfer.data);
+
         let stringToTransfert =
           DataFourToTranfer.nomFour +
           '..' +
           DataFourToTranfer.date +
           '..' +
           JSON.stringify(DataFourToTranfer.data);
-        console.log(stringToTransfert);
-        console.log(
-          'TTTTTTTTTTTTEEEEEEEEEEEEESSSSSSSSSSSSSSSSSSSSTTTTTTTTTTTT',
-        );
-        // console.log(this.test);
-        console.log(
-          'TTTTTTTTTTTTEEEEEEEEEEEEESSSSSSSSSSSSSSSSSSSSTTTTTTTTTTTT',
-        );
-        axios
-          .post(
-            'http://essailudo.000webhostapp.com/simulation/simulation.php',
-            stringToTransfert,
-          )
-          .then((response) => {
-            console.log('response');
-            console.log(response.data);
-            Alert.alert('Les donnees sont parties sur le serveur!');
-          })
-          .catch((error) => {
-            console.log('error');
-            console.log(error);
-            Alert.alert('MArche pas');
-          });
-      }, 500);
+        console.log(stringToTransfert)
+
+        this.storeDataPourUnFour(stringToTransfert)
+
+
+        // axios.post('http://essailudo.000webhostapp.com/simulation/simulation.php',stringToTransfert,)
+        //   .then((response) => {
+        //     Alert.alert('Les donnees sont parties sur le serveur!');
+        //   })
+        //   .catch((error) => {
+        //     Alert.alert('MArche pas');
+        //   });
+      }
+      , 500);
     } catch (e) {
       // error reading value
       console.log(e);
     }
   };
+  storeDataPourUnFour = async (value) => {
+    try {
+      let Cle = this.state.fourSelectionne.name;
+
+      await AsyncStorage.setItem(Cle, String(value));
+      Alert.alert('Sauvegarde effectuée!');
+    } catch (e) {
+      // saving error
+      console.log(e)
+      Alert.alert('probleme !',e);
+    }
+
+  };
 
   handleInput(data) {
-    console.log('e.nativeEvent.value');
-    console.log(data);
-    console.log('cle data ????');
-    console.log(this.state.cleDataSave);
     let indexSimulation = this.state.fourSelectionne.points.indexOf(
       parseInt(this.state.pointSimule),
     );
-    console.log('indexSimulation');
-    console.log(indexSimulation);
+
     let nextPoint = this.state.fourSelectionne.points[indexSimulation + 1];
 
     this.myTextInput.current.clear();
@@ -352,16 +303,13 @@ class ConnectionScreen extends React.Component {
     this.setState({DataToSave: this.state.DataToSave + ';' + data}, () => {
       if (nextPoint) {
         let consigneNextPoint = 'SOUR ' + nextPoint;
-
         this.setState({pointSimule: nextPoint});
-
         this.SendDataAuto(consigneNextPoint);
       } else {
         this.myTextInput.current.blur();
-        console.log('this.state.DataToSave');
+
         let dataFourToSave = this.state.DataToSave + '\n';
         this.storeData(dataFourToSave);
-        console.log("toto l'asticot");
         let stringVoievalidee =
           this.state.VoiesValidees + ' ' + this.state.voieSelectionne;
         this.setState({VoiesValidees: stringVoievalidee});
@@ -385,26 +333,18 @@ class ConnectionScreen extends React.Component {
     });
   }
   componentDidMount() {
-    console.log("c'est parti");
     this.onRead = RNBluetoothClassic.addListener(
       BTEvents.READ,
       this.handleRead,
       this,
     );
-    //this.poll = setInterval(() => this.pollForData(), 3000);
     this.SendDataAuto('rem');
-    // this.SendDataAuto('SOUR:TCouple')
   }
 
   //Selection du four
   selectFour = (four) => {
     this.test = '';
-
-    console.log('four');
-    console.log(four);
-
     this.setState({fourSelectionne: four});
-
     this.SendDataAuto('SOUR:Func TC');
   };
   //Selection de la voie
@@ -419,20 +359,12 @@ class ConnectionScreen extends React.Component {
 
       this.setState({cleDataSave: cleString});
       let fourSelectionne = this.state.fourSelectionne;
-
       let premierPoint = fourSelectionne.points[0];
-
       let consigne = 'SOUR ' + fourSelectionne.points[0];
-
-      // this.setState({DataToSave:""});
       this.SendDataAuto('SOUR:tcouple:type ' + voie.typeTc);
       setTimeout(() => {
         this.SendDataAuto(consigne);
-        console.log('et la consigne de depart apres 1 sec :' + consigne);
-        console.log('this.myTextInput.current');
         this.myTextInput.current.focus();
-        console.log('this.state.cleDataSave');
-        console.log(this.state.cleDataSave);
       }, 100);
     }, 500);
   };
@@ -440,7 +372,6 @@ class ConnectionScreen extends React.Component {
   // choisirFour = (four) => Alert.alert("four")
   componentWillUnmount() {
     this.onRead.remove();
-    //clearInterval(this.poll);
 
     RNBluetoothClassic.disconnect();
   }
@@ -474,8 +405,6 @@ class ConnectionScreen extends React.Component {
     console.log('send');
     let message = '';
     message = this.state.text + '\r'; // For commands
-    console.log('message');
-    console.log(message);
     await RNBluetoothClassic.write(message);
 
     let scannedData = this.state.scannedData;
@@ -488,24 +417,14 @@ class ConnectionScreen extends React.Component {
   };
 
   SendDataAuto = async (consigne) => {
-    console.log('sendDataAuto');
-    console.log('consigne');
-    console.log(consigne);
-    // console.log(consigne.slice(5));
     this.setState({pointSimule: consigne.slice(5)});
     let message = consigne + '\r'; // For commands
-    console.log('message');
-    console.log(message);
     await RNBluetoothClassic.write(message);
-    console.log('AAAALLLLLLLLOOOOO this.state.pointSimule');
-    console.log(this.state.pointSimule);
   };
 
   render() {
-    // console.log('DeviceConnection.render()');
-
-    // console.log(this.state);
-
+  console.log('this.state')
+  console.log(this.state)
     return (
       <View style={styles.container}>
         <View style={styles.listFourContainer}>
@@ -517,8 +436,6 @@ class ConnectionScreen extends React.Component {
           />
         </View>
         <View style={{flex: 10}}>
-          {/* //TODO */}
-          {/* <MyStack/> */}
           {this.state.fourSelectionne.name == undefined ? (
             <Text>Choisissez un four</Text>
           ) : (
@@ -585,9 +502,6 @@ class ConnectionScreen extends React.Component {
                 </View>
               </View>
 
-              {/* <View style={{flex:1,backgroundColor:"white"}}> */}
-              {/* <Button onPress={this.lireDATA} title="lire data"/> */}
-              {/* </View> */}
               <View
                 style={{
                   flex: 3,
@@ -608,10 +522,10 @@ class ConnectionScreen extends React.Component {
                     <TextInput
                       ref={this.myTextInput}
                       autoFocus={true}
-                      onBlur={() => {
-                        console.log('blur');
-                      }}
-                      onLayout={() => console.log('layout')}
+                      // onBlur={() => {
+                      //   console.log('blur');
+                      // }}
+                      // onLayout={() => console.log('layout')}
                       textAlign={'center'}
                       blurOnSubmit={false}
                       keyboardType="numeric"
