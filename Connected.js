@@ -21,10 +21,12 @@ import {
   Pressable,
 } from 'react-native';
 
+
 import React from 'react';
 import {styles} from './style';
 import {foursData} from './fourData';
-
+const RNFS= require('react-native-fs')
+const path = RNFS.DocumentDirectoryPath
 import 'react-native-gesture-handler';
 import {createStackNavigator} from '@react-navigation/stack';
 import {NavigationContainer} from '@react-navigation/native';
@@ -282,7 +284,12 @@ class ConnectionScreen extends React.Component {
       let Cle = this.state.fourSelectionne.name;
 
       await AsyncStorage.setItem(Cle, String(value));
-      Alert.alert('Sauvegarde effectuée!');
+      RNFS.writeFile(path+"/"+Cle+".txt",String(value),'utf8')
+      .then((success)=>{
+        Alert.alert('creation du fichier effectué!');
+      })
+      .catch((err)=>{console.log(err)})
+      
     } catch (e) {
       // saving error
       console.log(e)
