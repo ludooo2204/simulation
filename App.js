@@ -3,7 +3,7 @@ import axios from 'axios';
 import {ConnectionScreen, FourList, DeviceList} from './Connected';
 import {styles} from './style';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Alert, Button, Text, View, ActivityIndicator} from 'react-native';
+import {Alert, Button, Text, View, ActivityIndicator,PermissionsAndroid} from 'react-native';
 import RNBluetoothClassic, {
   BTEvents,
   BTCharsets,
@@ -14,6 +14,7 @@ export default class App extends React.Component {
     super(props);
     this.state = {
       deviceList: [],
+      // connectedDevice: true,
       connectedDevice: undefined,
       scannedData: [],
       isAccepting: false,
@@ -118,7 +119,24 @@ export default class App extends React.Component {
 
     this.setState(newState);
   }
-
+  async askPermission() {
+    console.log("asking permission");
+    const granted = await PermissionsAndroid.check(
+      "android.permission.READ_EXTERNAL_STORAGE"
+    );
+    if (!granted) {
+      console.log("Permission not granted");
+      const response = await PermissionsAndroid.request(
+        "android.permission.READ_EXTERNAL_STORAGE"
+      );
+      if (!response) {
+        console.log("Permission not granted & non respinse");
+        return;
+      }
+    } else {
+      console.log("Permission granted");
+    }
+  }
   async connectToDevice(device) {
     console.log(`connexion en cours ${device.id}`);
     //todo toast native
@@ -224,6 +242,7 @@ export default class App extends React.Component {
   };
 
   render() {
+    this.askPermission()
     console.log('App.render()');
     console.log('this.state');
     console.log(this.state);
@@ -242,6 +261,12 @@ export default class App extends React.Component {
 
     return (
       <View style={styles.container}>
+        <ConnectionScreen
+            device={this.state.connectedDevice}
+            scannedData={this.state.scannedData}
+            disconnect={this.unselectDevice}
+            onSend={this.onSend}
+          />
         {this.state.connectedDevice ? (
           <ConnectionScreen
             device={this.state.connectedDevice}

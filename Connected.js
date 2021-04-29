@@ -26,10 +26,13 @@ import React from 'react';
 import {styles} from './style';
 import {foursData} from './fourData';
 const RNFS= require('react-native-fs')
-const path = RNFS.DocumentDirectoryPath
+const path = RNFS.DownloadDirectoryPath 
 import 'react-native-gesture-handler';
 import {createStackNavigator} from '@react-navigation/stack';
 import {NavigationContainer} from '@react-navigation/native';
+import Share from 'react-native-share';
+
+
 const Stack = createStackNavigator();
 
 const Notifications = () => {
@@ -265,13 +268,7 @@ class ConnectionScreen extends React.Component {
         this.storeDataPourUnFour(stringToTransfert)
 
 
-        // axios.post('http://essailudo.000webhostapp.com/simulation/simulation.php',stringToTransfert,)
-        //   .then((response) => {
-        //     Alert.alert('Les donnees sont parties sur le serveur!');
-        //   })
-        //   .catch((error) => {
-        //     Alert.alert('MArche pas');
-        //   });
+      
       }
       , 500);
     } catch (e) {
@@ -282,14 +279,33 @@ class ConnectionScreen extends React.Component {
   storeDataPourUnFour = async (value) => {
     try {
       let Cle = this.state.fourSelectionne.name;
-
+    //   const options ={
+    //     title: "This is my report ",
+    //     message: String(value),
+    //     url:  "file:///storage/emulated/0/test.txt",
+    //     subject: "Report",
+    // }
       await AsyncStorage.setItem(Cle, String(value));
       RNFS.writeFile(path+"/"+Cle+".txt",String(value),'utf8')
       .then((success)=>{
+        console.log('success')
+        console.log(success)
         Alert.alert('creation du fichier effectué!');
       })
       .catch((err)=>{console.log(err)})
       
+
+      // Share.open(options)
+      // .then((res) => {
+      //   console.log("share Sucess!");
+      //   console.log(res);
+      // })
+      // .catch((err) => {
+      //   err && console.log(err);
+      // });
+
+
+
     } catch (e) {
       // saving error
       console.log(e)
