@@ -30,7 +30,7 @@ const path = RNFS.DownloadDirectoryPath
 import 'react-native-gesture-handler';
 import {createStackNavigator} from '@react-navigation/stack';
 import {NavigationContainer} from '@react-navigation/native';
-import Share from 'react-native-share';
+// import Share from 'react-native-share';
 
 
 const Stack = createStackNavigator();
@@ -190,21 +190,21 @@ class ConnectionScreen extends React.Component {
     }
   };
 
-  getData = async () => {
-    try {
-      let dataCle = this.state.cleDataSave.toString();
+  // getData = async () => {
+  //   try {
+  //     let dataCle = this.state.cleDataSave.toString();
 
-      const valueSaved = await AsyncStorage.getItem(dataCle);
-      // const valueSaved = await AsyncStorage.getItem('ludo')
+  //     const valueSaved = await AsyncStorage.getItem(dataCle);
+  //     // const valueSaved = await AsyncStorage.getItem('ludo')
 
-      if (valueSaved !== null) {
-        Alert.alert('value ' + valueSaved);
-      }
-    } catch (e) {
-      // error reading value
-      console.log(e);
-    }
-  };
+  //     if (valueSaved !== null) {
+  //       Alert.alert('value ' + valueSaved);
+  //     }
+  //   } catch (e) {
+  //     // error reading value
+  //     console.log(e);
+  //   }
+  // };
   getDataFour = async (cle) => {
     try {
       const valueSaved = await AsyncStorage.getItem(cle);
@@ -245,24 +245,25 @@ class ConnectionScreen extends React.Component {
 
       setTimeout(() => {
         let data = this.test.split('\n');
+// console.log('this.test')
+// console.log(this.test)
+        // for (const iterator of data) {
+        //   if (iterator != '') {
+        //     let dataPoint = {};
+        //     let dataInter = iterator.split(';');
+        //     dataPoint.name = dataInter[0];
+        //     dataPoint.points = dataInter.slice(1);
 
-        for (const iterator of data) {
-          if (iterator != '') {
-            let dataPoint = {};
-            let dataInter = iterator.split(';');
-            dataPoint.name = dataInter[0];
-            dataPoint.points = dataInter.slice(1);
-
-            DataFourToTranfer.data.push(dataPoint);
-          }
-        }
-
+        //     DataFourToTranfer.data.push(dataPoint);
+        //   }
+        // }
+console.log(DataFourToTranfer.data)
         let stringToTransfert =
           DataFourToTranfer.nomFour +
-          '..' +
+          '\n' +
           DataFourToTranfer.date +
-          '..' +
-          JSON.stringify(DataFourToTranfer.data);
+          '\n' +
+          (this.test);
         console.log(stringToTransfert)
 
         this.storeDataPourUnFour(stringToTransfert)
@@ -286,11 +287,11 @@ class ConnectionScreen extends React.Component {
     //     subject: "Report",
     // }
       await AsyncStorage.setItem(Cle, String(value));
-      RNFS.writeFile(path+"/"+Cle+".txt",String(value),'utf8')
+      RNFS.writeFile(path+"/"+Cle+".csv",String(value),'utf8')
       .then((success)=>{
         console.log('success')
         console.log(success)
-        Alert.alert('creation du fichier effectué!');
+        Alert.alert('creation du fichier effectué!'+path+"/"+Cle+".csv");
       })
       .catch((err)=>{console.log(err)})
       
@@ -343,7 +344,7 @@ class ConnectionScreen extends React.Component {
           [
             {
               text: 'Cancel',
-              onPress: () => this.getData(),
+              // onPress: () => this.getData(),
               style: 'cancel',
             },
             {text: 'OK', onPress: () => this.controleSensibilite()},
@@ -446,8 +447,8 @@ class ConnectionScreen extends React.Component {
   };
 
   render() {
-  console.log('this.state')
-  console.log(this.state)
+  // console.log('this.state')
+  // console.log(this.state)
     return (
       <View style={styles.container}>
         <View style={styles.listFourContainer}>

@@ -244,8 +244,8 @@ export default class App extends React.Component {
   render() {
     this.askPermission()
     console.log('App.render()');
-    console.log('this.state');
-    console.log(this.state);
+    // console.log('this.state');
+    // console.log(this.state);
 
     let connectedColor = !this.state.bluetoothEnabled
       ? styles.toolbarButton.color
@@ -261,12 +261,12 @@ export default class App extends React.Component {
 
     return (
       <View style={styles.container}>
-        <ConnectionScreen
+        {/* <ConnectionScreen
             device={this.state.connectedDevice}
             scannedData={this.state.scannedData}
             disconnect={this.unselectDevice}
             onSend={this.onSend}
-          />
+          /> */}
         {this.state.connectedDevice ? (
           <ConnectionScreen
             device={this.state.connectedDevice}
