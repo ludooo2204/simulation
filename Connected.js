@@ -25,6 +25,7 @@ import {
 import React from 'react';
 import {styles} from './style';
 import {foursData} from './fourData';
+import MajFour from './MajFour';
 const RNFS = require('react-native-fs');
 const path = RNFS.DownloadDirectoryPath;
 import 'react-native-gesture-handler';
@@ -33,7 +34,6 @@ import {NavigationContainer} from '@react-navigation/native';
 // import Share from 'react-native-share';
 
 const Stack = createStackNavigator();
-
 
 //TODO bouton pour valider la valeur de la sensibilité et l'envoyer a la suite du string des valeur de points.
 const VoieDeMesure = ({voies, onPress, voieSelected}) => {
@@ -422,10 +422,12 @@ class ConnectionScreen extends React.Component {
     let message = consigne + '\r'; // For commands
     await RNBluetoothClassic.write(message);
   };
+  modifierPointsSimu = () => {
+console.log(this.state.fourSelectionne.points);
+  };
 
   render() {
-    // console.log('this.state')
-    // console.log(this.state)
+
     return (
       <View style={styles.container}>
         <View style={styles.listFourContainer}>
@@ -438,7 +440,10 @@ class ConnectionScreen extends React.Component {
         </View>
         <View style={{flex: 10}}>
           {this.state.fourSelectionne.name == undefined ? (
-            <Text>Choisissez un four</Text>
+            <View>
+              <Text>Choisissez un four</Text>
+              <MajFour />
+            </View>
           ) : (
             <View style={{flex: 1}}>
               <View style={{flex: 1}}>
@@ -450,9 +455,12 @@ class ConnectionScreen extends React.Component {
               </View>
 
               <View style={{flex: 3}}>
-                <Text style={{padding: 5, textAlign: 'center', fontSize: 20}}>
-                  {'Points a controler  ' + this.state.fourSelectionne.points}
-                </Text>
+                <Pressable onPress={this.modifierPointsSimu}>
+                  <Text style={{padding: 5, textAlign: 'center', fontSize: 30}}>
+                    {'Points a controler  ' +this.state.fourSelectionne.points}
+                    {/* {console.log(typeof this.state.fourSelectionne.points)} */}
+                  </Text>
+                </Pressable>
                 <View
                   style={{
                     alignItems: 'center',
