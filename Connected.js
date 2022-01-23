@@ -1,3 +1,4 @@
+//TODO enregistrer foursData dans un nouveau copmposant permettant de store en local d nouveau four et des nouveau pts de simulation
 //TODO changer les setTimeout des setState et mettre des callbacks!!
 //TODO mettre l'heure de la saisie et non celle de l'envoi sur le server
 
@@ -21,38 +22,18 @@ import {
   Pressable,
 } from 'react-native';
 
-
 import React from 'react';
 import {styles} from './style';
 import {foursData} from './fourData';
-const RNFS= require('react-native-fs')
-const path = RNFS.DownloadDirectoryPath 
+const RNFS = require('react-native-fs');
+const path = RNFS.DownloadDirectoryPath;
 import 'react-native-gesture-handler';
 import {createStackNavigator} from '@react-navigation/stack';
 import {NavigationContainer} from '@react-navigation/native';
 // import Share from 'react-native-share';
 
-
 const Stack = createStackNavigator();
 
-const Notifications = () => {
-  return (
-    <View>
-      <Text>Notifications</Text>
-    </View>
-  );
-};
-
-// function MyStack() {
-//   return (
-//     <NavigationContainer>
-//       <Stack.Navigator initialRouteName="Home">
-//         <Stack.Screen name="Home" component={HomeScreen} />
-//         <Stack.Screen name="Notifications" component={Notifications} />
-//       </Stack.Navigator>
-//     </NavigationContainer>
-//   );
-// }
 
 //TODO bouton pour valider la valeur de la sensibilité et l'envoyer a la suite du string des valeur de points.
 const VoieDeMesure = ({voies, onPress, voieSelected}) => {
@@ -245,8 +226,8 @@ class ConnectionScreen extends React.Component {
 
       setTimeout(() => {
         let data = this.test.split('\n');
-// console.log('this.test')
-// console.log(this.test)
+        // console.log('this.test')
+        // console.log(this.test)
         // for (const iterator of data) {
         //   if (iterator != '') {
         //     let dataPoint = {};
@@ -257,22 +238,18 @@ class ConnectionScreen extends React.Component {
         //     DataFourToTranfer.data.push(dataPoint);
         //   }
         // }
-console.log(DataFourToTranfer.data)
-console.log(DataFourToTranfer.data)
+        console.log(DataFourToTranfer.data);
+        console.log(DataFourToTranfer.data);
         let stringToTransfert =
           DataFourToTranfer.nomFour +
           '\n' +
           DataFourToTranfer.date +
           '\n' +
-          (this.test);
-        console.log(stringToTransfert)
+          this.test;
+        console.log(stringToTransfert);
 
-        this.storeDataPourUnFour(stringToTransfert)
-
-
-      
-      }
-      , 500);
+        this.storeDataPourUnFour(stringToTransfert);
+      }, 500);
     } catch (e) {
       // error reading value
       console.log(e);
@@ -281,21 +258,24 @@ console.log(DataFourToTranfer.data)
   storeDataPourUnFour = async (value) => {
     try {
       let Cle = this.state.fourSelectionne.name;
-    //   const options ={
-    //     title: "This is my report ",
-    //     message: String(value),
-    //     url:  "file:///storage/emulated/0/test.txt",
-    //     subject: "Report",
-    // }
+      //   const options ={
+      //     title: "This is my report ",
+      //     message: String(value),
+      //     url:  "file:///storage/emulated/0/test.txt",
+      //     subject: "Report",
+      // }
       await AsyncStorage.setItem(Cle, String(value));
-      RNFS.writeFile(path+"/"+Cle+".csv",String(value),'utf8')
-      .then((success)=>{
-        console.log('success')
-        console.log(success)
-        Alert.alert('creation du fichier effectué!'+path+"/"+Cle+".csv");
-      })
-      .catch((err)=>{console.log(err)})
-      
+      RNFS.writeFile(path + '/' + Cle + '.csv', String(value), 'utf8')
+        .then((success) => {
+          console.log('success');
+          console.log(success);
+          Alert.alert(
+            'creation du fichier effectué!' + path + '/' + Cle + '.csv',
+          );
+        })
+        .catch((err) => {
+          console.log(err);
+        });
 
       // Share.open(options)
       // .then((res) => {
@@ -305,15 +285,11 @@ console.log(DataFourToTranfer.data)
       // .catch((err) => {
       //   err && console.log(err);
       // });
-
-
-
     } catch (e) {
       // saving error
-      console.log(e)
-      Alert.alert('probleme !',e);
+      console.log(e);
+      Alert.alert('probleme !', e);
     }
-
   };
 
   handleInput(data) {
@@ -448,8 +424,8 @@ console.log(DataFourToTranfer.data)
   };
 
   render() {
-  // console.log('this.state')
-  // console.log(this.state)
+    // console.log('this.state')
+    // console.log(this.state)
     return (
       <View style={styles.container}>
         <View style={styles.listFourContainer}>
