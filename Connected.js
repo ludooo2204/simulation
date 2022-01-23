@@ -258,6 +258,7 @@ class ConnectionScreen extends React.Component {
         //   }
         // }
 console.log(DataFourToTranfer.data)
+console.log(DataFourToTranfer.data)
         let stringToTransfert =
           DataFourToTranfer.nomFour +
           '\n' +
