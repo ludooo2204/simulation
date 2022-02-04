@@ -24,7 +24,18 @@ import {
 
 import React from 'react';
 import {styles} from './style';
-import {foursData} from './fourData';
+import {foursDataFromstorage,foursData} from './fourData';
+console.log("foursDataFromstorage");
+console.log("foursDataFromstorage");
+console.log("foursDataFromstorage");
+console.log("foursDataFromstorage");
+console.log(foursDataFromstorage);
+console.log("foursData");
+console.log("foursData");
+console.log("foursData");
+console.log("foursData");
+console.log("foursData");
+console.log(foursData);
 import MajFour from './MajFour';
 const RNFS = require('react-native-fs');
 const path = RNFS.DownloadDirectoryPath;
@@ -458,7 +469,6 @@ console.log(this.state.fourSelectionne.points);
                 <Pressable onPress={this.modifierPointsSimu}>
                   <Text style={{padding: 5, textAlign: 'center', fontSize: 30}}>
                     {'Points a controler  ' +this.state.fourSelectionne.points}
-                    {/* {console.log(typeof this.state.fourSelectionne.points)} */}
                   </Text>
                 </Pressable>
                 <View
